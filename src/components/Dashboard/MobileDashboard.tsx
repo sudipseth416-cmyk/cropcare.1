@@ -15,9 +15,11 @@ import {
   Shield,
   TrendingUp,
   Zap,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import AnalysisResult from '../DiseaseDetection/AnalysisResult';
 
 import { useWeather } from '@/hooks/useWeather';
 
@@ -36,7 +38,8 @@ const fadeUp = {
 
 export default function MobileDashboard({ onAction }: { onAction: (tab: string) => void }) {
   const { weather, loading: weatherLoading } = useWeather();
-  const [recentScans, setRecentScans] = React.useState([
+  const [selectedScan, setSelectedScan] = React.useState<any>(null);
+  const [recentScans, setRecentScans] = React.useState<any[]>([
     { id: '1', crop: 'Tomato', status: 'Healthy', date: 'Today', color: 'text-success', emoji: '🍅' },
     { id: '2', crop: 'Wheat', status: 'Infected', date: 'Yesterday', color: 'text-danger', emoji: '🌾' },
     { id: '3', crop: 'Rice', status: 'Healthy', date: 'Oct 22', color: 'text-success', emoji: '🌱' },
@@ -56,7 +59,8 @@ export default function MobileDashboard({ onAction }: { onAction: (tab: string) 
               status: isHealthy ? 'Healthy' : 'Infected',
               date: dateStr,
               color: isHealthy ? 'text-success' : 'text-danger',
-              emoji: isHealthy ? '🌱' : '⚠️'
+              emoji: isHealthy ? '🌱' : '⚠️',
+              rawResult: scan.result
             };
           });
           setRecentScans(formattedScans);
@@ -245,6 +249,7 @@ export default function MobileDashboard({ onAction }: { onAction: (tab: string) 
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 + i * 0.08 }}
               key={scan.id} 
+              onClick={() => { if (scan.rawResult) setSelectedScan(scan.rawResult); }}
               className="bg-black/25 backdrop-blur-md border border-white/5 p-4 rounded-[18px] flex justify-between items-center hover:bg-white/5 hover:border-white/10 transition-all duration-300 shadow-md group cursor-pointer"
             >
               <div className="flex items-center gap-3.5">
@@ -282,6 +287,34 @@ export default function MobileDashboard({ onAction }: { onAction: (tab: string) 
           </p>
         </div>
       </motion.div>
+
+      <AnimatePresence>
+        {selectedScan && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="bg-bg-dark border border-white/10 rounded-[28px] w-full max-w-2xl overflow-hidden relative shadow-2xl my-auto"
+            >
+              <button 
+                onClick={() => setSelectedScan(null)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/40 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+              <div className="p-4 md:p-6 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                <AnalysisResult result={selectedScan} />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
