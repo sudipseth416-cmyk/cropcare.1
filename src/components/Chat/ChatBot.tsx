@@ -125,9 +125,12 @@ export default function ChatBot() {
                 </div>
               </div>
               <div className="flex items-center gap-4 text-white/60">
-                <Video size={20} />
-                <Phone size={18} />
-                <MoreVertical size={20} />
+                <Video size={20} className="hidden md:block" />
+                <Phone size={18} className="hidden md:block" />
+                <button onClick={() => setIsOpen(false)} className="hover:text-white transition-colors hidden md:block">
+                  <X size={24} />
+                </button>
+                <MoreVertical size={20} className="md:hidden" />
               </div>
             </div>
 
