@@ -36,11 +36,34 @@ const fadeUp = {
 
 export default function MobileDashboard({ onAction }: { onAction: (tab: string) => void }) {
   const { weather, loading: weatherLoading } = useWeather();
-  const RECENT_SCANS = [
+  const [recentScans, setRecentScans] = React.useState([
     { id: '1', crop: 'Tomato', status: 'Healthy', date: 'Today', color: 'text-success', emoji: '🍅' },
     { id: '2', crop: 'Wheat', status: 'Infected', date: 'Yesterday', color: 'text-danger', emoji: '🌾' },
     { id: '3', crop: 'Rice', status: 'Healthy', date: 'Oct 22', color: 'text-success', emoji: '🌱' },
-  ];
+  ]);
+
+  React.useEffect(() => {
+    import('@/lib/db/indexedDB').then(({ getScans }) => {
+      getScans().then(scans => {
+        if (scans && scans.length > 0) {
+          scans.sort((a, b) => b.timestamp - a.timestamp);
+          const formattedScans = scans.slice(0, 3).map((scan) => {
+            const isHealthy = scan.result?.diseaseName?.toLowerCase().includes('healthy') || scan.result?.severity === 'Low';
+            const dateStr = new Date(scan.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            return {
+              id: scan.id,
+              crop: scan.result?.diseaseName ? scan.result.diseaseName.split(' ')[0] : 'Crop',
+              status: isHealthy ? 'Healthy' : 'Infected',
+              date: dateStr,
+              color: isHealthy ? 'text-success' : 'text-danger',
+              emoji: isHealthy ? '🌱' : '⚠️'
+            };
+          });
+          setRecentScans(formattedScans);
+        }
+      }).catch(console.error);
+    });
+  }, []);
 
   const STATS = [
     { label: 'Scans Today', value: '12', icon: Camera, color: 'from-primary/30 to-primary/10', border: 'border-primary/20', iconColor: 'text-primary' },
@@ -216,7 +239,7 @@ export default function MobileDashboard({ onAction }: { onAction: (tab: string) 
           <button className="text-[9px] font-bold text-primary uppercase tracking-widest hover:text-white transition-colors">View All</button>
         </div>
         <div className="space-y-2.5">
-          {RECENT_SCANS.map((scan, i) => (
+          {recentScans.map((scan, i) => (
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}

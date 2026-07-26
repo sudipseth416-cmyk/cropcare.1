@@ -10,6 +10,7 @@ import MultiImageUpload from './MultiImageUpload';
 import FieldAnalysisResultView from './FieldAnalysisResultView';
 import { detectDisease, DetectionResult } from '@/lib/api/diseaseDetection';
 import { useFieldAnalysis } from '@/hooks/useFieldAnalysis';
+import { saveScan, OfflineScan } from '@/lib/db/indexedDB';
 
 export default function Scanner() {
   // Mode toggle: 'single' | 'field'
@@ -33,6 +34,25 @@ export default function Scanner() {
     try {
       const data = await detectDisease(file);
       setSingleResult(data);
+
+      try {
+        const base64Image = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+        
+        const newScan: OfflineScan = {
+          id: Date.now().toString(),
+          image: base64Image,
+          timestamp: Date.now(),
+          result: data,
+          synced: false
+        };
+        await saveScan(newScan);
+      } catch (err) {
+        console.error('Failed to save scan offline:', err);
+      }
     } catch (err: any) {
       setSingleError(err.message || 'Something went wrong during analysis');
     } finally {
