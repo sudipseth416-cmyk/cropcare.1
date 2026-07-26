@@ -262,6 +262,3 @@ export default function MobileDashboard({ onAction }: { onAction: (tab: string) 
     </motion.div>
   );
 }
-
-  );
-}
