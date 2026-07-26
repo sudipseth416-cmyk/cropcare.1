@@ -30,6 +30,11 @@ const CropSearch = dynamic(() => import("@/components/Crops/CropSearch"), {
   ssr: false
 });
 
+const ProfilePage = dynamic(() => import("@/components/Profile/ProfilePage"), {
+  loading: () => <Skeleton className="h-[400px] w-full" />,
+  ssr: false
+});
+
 import NotificationBell from "@/components/Notifications/NotificationBell";
 import BottomNav from "@/components/Navigation/BottomNav";
 import MobileContainer from "@/components/Layout/MobileContainer";
@@ -37,7 +42,7 @@ import MobileDashboard from "@/components/Dashboard/MobileDashboard";
 import Onboarding from "@/components/Demo/Onboarding";
 import SectionBackground from "@/components/Layout/SectionBackground";
 import { triggerHaptic } from "@/lib/native/bridge";
-import { User, Settings, ShieldCheck, LogOut, Heart, HelpCircle, Play } from 'lucide-react';
+import { User, Play } from 'lucide-react';
 
 import { useUser } from "@/hooks/useUser";
 import SignInModal from "@/components/Auth/SignInModal";
@@ -183,51 +188,10 @@ export default function Home() {
             </MobileContainer>
           )}
 
-          {/* Profile Tab placeholder */}
+          {/* Profile Tab */}
           {(activeTab === 'profile') && (
             <MobileContainer title="My Profile" description="Manage your farm and settings.">
-              <div className="space-y-6">
-                <div className="card p-8 flex flex-col items-center text-center">
-                  <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                    <User size={48} className="text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold">{user?.isLoggedIn ? user.name : "Guest Farmer"}</h3>
-                  <p className="text-text-muted text-sm">{user?.isLoggedIn ? `${user.location} • ${user.email}` : "Punjab, India • Guest Access"}</p>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-4">
-                  {[
-                    { 
-                      icon: Play, 
-                      label: demoMode ? 'Deactivate Demo Mode' : 'Activate Demo Mode', 
-                      color: 'text-accent',
-                      onClick: () => { setDemoMode(!demoMode); triggerHaptic(); }
-                    },
-                    { icon: ShieldCheck, label: 'Verified Expert Status', color: 'text-primary' },
-                    { icon: Heart, label: 'Saved Diagnoses', color: 'text-danger' },
-                    { icon: Settings, label: 'App Settings', color: 'text-info' },
-                    { icon: HelpCircle, label: 'Help & Support', color: 'text-accent' },
-                    { 
-                      icon: LogOut, 
-                      label: 'Sign Out', 
-                      color: 'text-text-dim',
-                      onClick: () => { logout(); window.location.reload(); }
-                    }
-                  ].map((item, i) => (
-                    <button 
-                      key={i} 
-                      onClick={item.onClick}
-                      className="card p-6 flex justify-between items-center hover:bg-white/5 transition-all"
-                    >
-                      <div className="flex items-center gap-4">
-                        <item.icon size={20} className={item.color} />
-                        <span className="font-bold text-sm">{item.label}</span>
-                      </div>
-                      <div className="w-6 h-6 bg-white/5 rounded-lg" />
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <ProfilePage demoMode={demoMode} setDemoMode={setDemoMode} />
             </MobileContainer>
           )}
         </div>

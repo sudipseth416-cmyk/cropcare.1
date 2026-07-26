@@ -7,6 +7,7 @@ export interface UserProfile {
   email: string;
   location: string;
   isLoggedIn: boolean;
+  avatar?: string;
 }
 
 interface UserContextType {
@@ -14,6 +15,7 @@ interface UserContextType {
   loading: boolean;
   login: (profile: Omit<UserProfile, 'isLoggedIn'>) => void;
   logout: () => void;
+  updateUser: (updates: Partial<UserProfile>) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -54,8 +56,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const updateUser = useCallback((updates: Partial<UserProfile>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      try {
+        localStorage.setItem('cropcare_user', JSON.stringify(updated));
+      } catch (e) {
+        console.error("Failed to save updated user to storage", e);
+      }
+      return updated;
+    });
+  }, []);
+
   return (
-    <UserContext.Provider value={{ user, loading, login, logout }}>
+    <UserContext.Provider value={{ user, loading, login, logout, updateUser }}>
       {children}
     </UserContext.Provider>
   );
