@@ -4,6 +4,8 @@
 
 **CropCare AI** is a state-of-the-art, AI-powered agricultural ecosystem designed to empower farmers with precision farming tools. Built as a high-performance Progressive Web App (PWA) with native Android/iOS support via Capacitor, CropCare provides real-time insights, disease diagnosis, and community connectivity even in low-bandwidth or offline environments.
 
+### 🌟 [Live Demo](https://cropcare1-gamma.vercel.app) | 📖 [Read the Article on Medium](https://medium.com/@sudipseth416/building-cropcare-an-ai-powered-smart-farming-platform-for-early-plant-disease-detection-492d41cf8293)
+
 ---
 
 ## 🚀 Key Features
@@ -84,7 +86,7 @@ Run the development server:
 ```bash
 npm run dev
 ```
-Open https://cropcare-beta.vercel.app/ to see the result.
+Open [https://cropcare1-gamma.vercel.app](https://cropcare1-gamma.vercel.app) to see the live deployment.
 
 ---
 
