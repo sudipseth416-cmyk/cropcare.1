@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useUser } from '@/hooks/useUser';
 import { triggerHaptic } from '@/lib/native/bridge';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ProfilePageProps {
   demoMode: boolean;
@@ -19,6 +20,7 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ demoMode, setDemoMode }: ProfilePageProps) {
   const { user, logout, updateUser } = useUser();
+  const { isDarkMode, toggleTheme } = useTheme();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Edit states
@@ -31,7 +33,7 @@ export default function ProfilePage({ demoMode, setDemoMode }: ProfilePageProps)
   const [activePanel, setActivePanel] = useState<string | null>(null);
 
   // Settings states (persisted in localStorage)
-  const [darkMode, setDarkMode] = useState(true);
+  // Dark mode is managed by ThemeContext (isDarkMode + toggleTheme)
   const [notifications, setNotifications] = useState(true);
   const [language, setLanguage] = useState('English');
   const [autoSave, setAutoSave] = useState(true);
@@ -254,12 +256,12 @@ export default function ProfilePage({ demoMode, setDemoMode }: ProfilePageProps)
 
         {/* Dark Mode */}
         <MenuRow
-          icon={darkMode ? Moon : Sun}
+          icon={isDarkMode ? Moon : Sun}
           label="Dark Mode"
-          subtitle="Toggle app appearance"
+          subtitle={isDarkMode ? 'Dark theme active' : 'Light theme active'}
           color="text-purple-400"
           rightElement={
-            <ToggleSwitch value={darkMode} onChange={() => setDarkMode(!darkMode)} color="purple" />
+            <ToggleSwitch value={isDarkMode} onChange={() => { toggleTheme(); triggerHaptic(); }} color="purple" />
           }
         />
 

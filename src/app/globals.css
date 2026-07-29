@@ -2,15 +2,280 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* ===== DARK THEME (default) ===== */
+:root,
+html.dark {
   --background: #070a09;
   --foreground: #f8fafc;
+  --card-bg: rgba(20, 20, 20, 0.6);
+  --card-bg-hover: rgba(30, 30, 30, 0.8);
+  --surface: rgba(0, 0, 0, 0.25);
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --text-dim: rgba(255, 255, 255, 0.3);
+  --overlay: rgba(0, 0, 0, 0.7);
+  --panel-bg: #0f1419;
+  --glow-opacity: 1;
+  --header-bg: rgba(10, 10, 10, 0.6);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --badge-bg: rgba(0, 242, 96, 0.1);
+  --invert-filter: none;
+}
+
+/* ===== LIGHT THEME ===== */
+html.light {
+  --background: #f0f4f3;
+  --foreground: #111827;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-bg-hover: rgba(255, 255, 255, 0.95);
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-hover: rgba(0, 0, 0, 0.04);
+  --border: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.2);
+  --text-primary: #111827;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --text-dim: rgba(0, 0, 0, 0.3);
+  --overlay: rgba(0, 0, 0, 0.4);
+  --panel-bg: #ffffff;
+  --glow-opacity: 0.4;
+  --header-bg: rgba(240, 244, 243, 0.85);
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --badge-bg: rgba(0, 180, 70, 0.12);
+  --invert-filter: none;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* ===== LIGHT MODE OVERRIDES =====
+   These apply broad visual corrections so existing dark-hardcoded
+   Tailwind classes render properly in light mode without editing
+   every component file. */
+
+html.light main {
+  background: var(--background) !important;
+}
+
+/* Header and nav backgrounds */
+html.light header,
+html.light nav {
+  background: var(--header-bg) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 4px 30px var(--shadow-color) !important;
+}
+
+/* All cards & surfaces that use bg-black or bg-bg-card */
+html.light .card,
+html.light [class*="bg-black/"],
+html.light [class*="bg-bg-card"] {
+  background: var(--card-bg) !important;
+  border-color: var(--border) !important;
+}
+
+html.light [class*="bg-black/25"],
+html.light [class*="bg-black/20"],
+html.light [class*="bg-black/30"],
+html.light [class*="bg-black/40"],
+html.light [class*="bg-black/60"] {
+  background: var(--surface) !important;
+}
+
+/* Text corrections — override hardcoded text-white */
+html.light [class*="text-white/90"],
+html.light [class*="text-white/80"],
+html.light h2[class*="text-white"],
+html.light h3[class*="text-white"],
+html.light h4[class*="text-white"],
+html.light p[class*="text-white"],
+html.light span[class*="text-white/90"],
+html.light span[class*="text-white/80"],
+html.light span[class*="text-white/70"] {
+  color: var(--text-primary) !important;
+}
+
+html.light [class*="text-white/60"],
+html.light [class*="text-white/50"] {
+  color: var(--text-muted) !important;
+}
+
+html.light [class*="text-white/40"],
+html.light [class*="text-white/35"],
+html.light [class*="text-white/30"],
+html.light [class*="text-white/20"],
+html.light [class*="text-white/15"],
+html.light [class*="text-white/10"] {
+  color: var(--text-dim) !important;
+}
+
+/* Border overrides */
+html.light [class*="border-white/5"],
+html.light [class*="border-white/10"],
+html.light [class*="border-white/15"],
+html.light [class*="border-white/20"] {
+  border-color: var(--border) !important;
+}
+
+/* Surface/background overrides for white-alpha backgrounds */
+html.light [class*="bg-white/5"],
+html.light [class*="bg-white/10"] {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Panel overlay for bottom sheets / modals */
+html.light [class*="bg-\\[\\#0f1419\\]"] {
+  background: var(--panel-bg) !important;
+}
+
+/* Footer */
+html.light footer {
+  border-color: var(--border) !important;
+}
+
+html.light footer p {
+  color: var(--text-muted) !important;
+}
+
+/* Glassmorphism backdrop adjustments */
+html.light [class*="backdrop-blur"] {
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* Glow and radial gradient toning */
+html.light [class*="drop-shadow"] {
+  filter: none;
+}
+
+html.light [class*="shadow-2xl"],
+html.light [class*="shadow-xl"] {
+  box-shadow: 0 4px 24px var(--shadow-color) !important;
+}
+
+/* Input fields */
+html.light input[class*="bg-white/5"] {
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+html.light input::placeholder {
+  color: var(--text-dim) !important;
+}
+
+/* Menu row buttons in profile */
+html.light button[class*="bg-black/25"] {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html.light button[class*="bg-black/25"]:hover {
+  background: var(--surface-hover) !important;
+}
+
+/* Profile hero card gradient adjustment */
+html.light [class*="from-primary/15"][class*="via-black/40"] {
+  background: linear-gradient(135deg, rgba(0, 242, 96, 0.08), rgba(255, 255, 255, 0.6), rgba(59, 130, 246, 0.06)) !important;
+}
+
+/* Details/accordion in panels */
+html.light details[class*="bg-white/5"] {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: var(--border) !important;
+}
+
+/* Skeleton backgrounds */
+html.light [class*="animate-pulse"] {
+  background: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Section background decorative elements: tone down in light mode */
+html.light .section-bg-glow {
+  opacity: 0.15;
+}
+
+/* Sign-out button */
+html.light button[class*="bg-danger/10"] {
+  background: rgba(239, 68, 68, 0.08) !important;
+  border-color: rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Bottom navigation */
+html.light nav[class*="bg-bg-card"] {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 -2px 20px var(--shadow-color) !important;
+}
+
+/* Section background decorative elements: tone down in light mode */
+html.light .fixed[class*="z-0"] {
+  opacity: 0.35;
+}
+
+/* Bottom gradient in section backgrounds */
+html.light [class*="from-bg-dark"] {
+  background: linear-gradient(to top, var(--background), transparent) !important;
+}
+
+/* Dashboard stat cards and gradient cards */
+html.light [class*="rounded-\\[20px\\]"][class*="backdrop-blur"],
+html.light [class*="rounded-\\[28px\\]"][class*="backdrop-blur"] {
+  background: var(--card-bg) !important;
+  border-color: var(--border) !important;
+}
+
+/* Demo mode badge */
+html.light [class*="bg-accent"][class*="text-black"] {
+  /* Keep accent badge as-is in light mode */
+}
+
+/* Gradient text — keep it visible in light mode */
+html.light [class*="bg-premium-gradient"][class*="bg-clip-text"] {
+  -webkit-text-fill-color: transparent;
+}
+
+/* Chat and voice assistant overlays */
+html.light [class*="bg-\\[\\#0a0a0a\\]"],
+html.light [class*="bg-\\[\\#111\\]"],
+html.light [class*="bg-\\[\\#0d0d0d\\]"] {
+  background: var(--panel-bg) !important;
+}
+
+/* Loading splash - keep dark for branding */
+html.light [class*="fixed"][class*="z-\\[9999\\]"] {
+  /* Splash screen stays dark regardless */
+}
+
+/* Progress bars and active indicators keep their colors */
+html.light [class*="bg-primary"],
+html.light [class*="bg-info"],
+html.light [class*="bg-accent"],
+html.light [class*="bg-danger"],
+html.light [class*="bg-warning"] {
+  /* These semantic colors stay as-is */
+}
+
+/* Smooth transition for all theme-affected elements */
+html.light *,
+html.dark * {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+/* Exclude animations and transforms from the transition */
+html.light [class*="animate-"],
+html.dark [class*="animate-"],
+html.light [class*="transition-transform"],
+html.dark [class*="transition-transform"] {
+  transition-property: transform;
 }
 
 @layer components {
