@@ -9,6 +9,7 @@ import {
   UserCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useUser } from '@/hooks/useUser';
 
 interface NavItem {
   id: string;
@@ -25,6 +26,8 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export default function BottomNav({ activeTab, onTabChange }: { activeTab: string, onTabChange: (id: string) => void }) {
+  const { user } = useUser();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[100] bg-bg-card/80 backdrop-blur-xl border-t border-white/5 px-4 pb-8 pt-4 md:hidden">
       <div className="max-w-md mx-auto flex justify-between items-center">
@@ -44,7 +47,13 @@ export default function BottomNav({ activeTab, onTabChange }: { activeTab: strin
                 </div>
               ) : (
                 <div className={`p-2 rounded-xl transition-all ${isActive ? 'text-primary' : 'text-text-dim'}`}>
-                  <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                  {item.id === 'profile' && user?.avatar ? (
+                    <div className="w-[22px] h-[22px] rounded-full overflow-hidden border border-current">
+                      <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                  )}
                 </div>
               )}
               {!isScanner && (

@@ -126,9 +126,13 @@ export default function Home() {
               <a href="#" onClick={() => setActiveTab('community')} className="hover:text-primary transition-colors">Community</a>
             </div>
             {user?.isLoggedIn ? (
-              <button onClick={() => setActiveTab('profile')} className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
-                <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary">
-                   <User size={16} />
+              <button onClick={() => setActiveTab('profile')} className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl border border-white/10 transition-colors hover:bg-white/10">
+                <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary overflow-hidden border border-primary/30">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={16} />
+                  )}
                 </div>
                 <span className="text-sm font-bold">{user.name}</span>
               </button>
